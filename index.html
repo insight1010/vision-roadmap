@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Roadmap</title>
+    <style>
+        :root {
+            --primary-color: #48a3f5;
+            --bg-gradient: linear-gradient(135deg, #0a1930 0%, #000000 100%);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        @font-face {
+            font-family: 'SF Pro Display';
+            src: local('SF Pro Display');
+            font-weight: normal;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero h1 {
+            font-size: 8vw;
+            background: linear-gradient(135deg, #fff 0%, var(--primary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .timeline {
+            padding: 50px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .week-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            transform: translateY(50px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .week-card.completed {
+            border-color: #00ff88;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.05) 0%, rgba(72, 163, 245, 0.05) 100%);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+
+        .week-card.completed h2 {
+            background: linear-gradient(135deg, #00ff88 0%, var(--primary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .week-card.completed::after {
+            content: '✓';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #00ff88;
+            opacity: 0.8;
+        }
+
+        .week-card.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .week-card h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .task-checkbox {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--primary-color);
+            border-radius: 6px;
+            margin-right: 15px;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .task-checkbox:checked {
+            background: var(--primary-color);
+        }
+
+        .task-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            color: black;
+            font-size: 16px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .progress-inner {
+            width: 60%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary-color), #00ff88);
+            transition: width 0.5s ease;
+        }
+
+        .background-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .blur-circle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .blur-circle:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            background: var(--primary-color);
+            top: 20%;
+            left: 10%;
+        }
+
+        .blur-circle:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            background: #ff3366;
+            top: 60%;
+            right: 20%;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 30px); }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 12vw;
+            }
+
+            .week-card {
+                padding: 20px;
+            }
+
+            .progress-inner {
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-effects">
+        <div class="blur-circle"></div>
+        <div class="blur-circle"></div>
+    </div>
+
+    <section class="hero">
+        <h1>Vision Roadmap</h1>
+    </section>
+
+    <div class="timeline">
+        <div class="week-card">
+            <h2>Неделя 1: Подготовка и стартовое оформление</h2>
+            <ul class="task-list">
+                <li class="task-item">
+                    <input type="checkbox" class="task-checkbox">
+                    <span>Финальная доработка IT-решения</span>
+                </li>
+                <li class="task-item">
+                    <input type="checkbox" class="task-checkbox">
+                    <span>Упаковка и презентация</span>
+                </li>
+                <li class="task-item">
+                    <input type="checkbox" class="task-checkbox">
+                    <span>Определение и сегментирование целевой аудитории</span>
+                </li>
+                <li class="task-item">
+                    <input type="checkbox" class="task-checkbox">
+                    <span>Создание/обновление соцсетей</span>
+                </li>
+                <li class="task-item">
+                    <input type="checkbox" class="task-checkbox">
+                    <span>Контент-план (черновая версия)</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Остальные недели будут добавлены через JavaScript -->
+    </div>
+
+    <div class="progress-bar">
+        <div class="progress-inner">
+            <div class="progress-fill"></div>
+        </div>
+    </div>
+
+    <script>
+        // Данные для остальных недель
+        const weeks = [
+            {
+                title: 'Неделя 2: Активный запуск и первые публикации',
+                tasks: [
+                    'Запуск контента',
+                    'Привлечение первых пользователей',
+                    'Обратная связь',
+                    'Анализ первых результатов'
+                ]
+            },
+            {
+                title: 'Неделя 3: Укрепление присутствия',
+                tasks: [
+                    'Регулярные публикации',
+                    'Тест новых форматов',
+                    'Укрепление репутации',
+                    'Начало коллабораций'
+                ]
+            },
+            {
+                title: 'Неделя 4: Расширение охвата',
+                tasks: [
+                    'Активный контент-маркетинг',
+                    'Подбор тематических сообществ',
+                    'Коллаборации',
+                    'Подсчёт промежуточных результатов',
+                    'Корректировка стратегии'
+                ]
+            },
+            {
+                title: 'Неделя 5: Усиление маркетинга',
+                tasks: [
+                    'Мини-акции или ивенты',
+                    'Усиление контента',
+                    'Сарафанное радио',
+                    'Регулярная обратная связь'
+                ]
+            },
+            {
+                title: 'Неделя 6: Масштабирование',
+                tasks: [
+                    'Анонс обновлений',
+                    'Масштабирование коллабораций',
+                    'Возможная платная реклама',
+                    'Повышение лояльности',
+                    'Монетизация'
+                ]
+            },
+            {
+                title: 'Неделя 7: Глубокая работа с аудиторией',
+                tasks: [
+                    'Системный сбор отзывов и кейсов',
+                    'Сегментация аудитории',
+                    'Онлайн-/офлайн-ивенты',
+                    'Регулярный контент'
+                ]
+            },
+            {
+                title: 'Неделя 8: Итоговый рывок',
+                tasks: [
+                    'Финальный "запуск" и продвижение',
+                    'Анализ KPI',
+                    'Оценка каналов продвижения',
+                    'Дальнейшие планы',
+                    'Закрепление комьюнити'
+                ]
+            }
+        ];
+
+        // Добавление недель в DOM
+        const timeline = document.querySelector('.timeline');
+        weeks.forEach(week => {
+            const weekCard = document.createElement('div');
+            weekCard.className = 'week-card';
+            weekCard.innerHTML = `
+                <h2>${week.title}</h2>
+                <ul class="task-list">
+                    ${week.tasks.map(task => `
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox">
+                            <span>${task}</span>
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+            timeline.appendChild(weekCard);
+        });
+
+        // Анимация появления карточек при скролле
+        const cards = document.querySelectorAll('.week-card');
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            },
+            { threshold: 0.1 }
+        );
+
+        cards.forEach(card => observer.observe(card));
+
+        // Обработка чекбоксов и прогресс-бара
+        const checkboxes = document.querySelectorAll('.task-checkbox');
+        const progressFill = document.querySelector('.progress-fill');
+
+        function updateProgress() {
+            const total = checkboxes.length;
+            const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+            const percentage = (checked / total) * 100;
+            progressFill.style.width = `${percentage}%`;
+            
+            // Сохранение состояния в localStorage
+            const checkboxStates = Array.from(checkboxes).map(cb => cb.checked);
+            localStorage.setItem('taskStates', JSON.stringify(checkboxStates));
+        }
+
+        // Загрузка сохраненного состояния
+        const savedStates = JSON.parse(localStorage.getItem('taskStates'));
+        if (savedStates) {
+            checkboxes.forEach((cb, index) => {
+                cb.checked = savedStates[index];
+            });
+            updateProgress();
+        }
+
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', updateProgress);
+        });
+
+        // В JavaScript заменим код обработки карточек
+        cards.forEach(card => {
+            // Функция для проверки завершенности карточки
+            function checkCardCompletion(card) {
+                const checkboxes = card.querySelectorAll('.task-checkbox');
+                const isCompleted = Array.from(checkboxes).every(cb => cb.checked);
+                if (isCompleted) {
+                    card.classList.add('completed');
+                    // Добавляем анимацию празднования
+                    if (!card.classList.contains('celebrated')) {
+                        card.classList.add('celebrated');
+                        card.style.animation = 'celebrate 0.5s ease';
+                        setTimeout(() => {
+                            card.style.animation = '';
+                        }, 500);
+                    }
+                } else {
+                    card.classList.remove('completed');
+                    card.classList.remove('celebrated');
+                }
+            }
+
+            // Проверяем начальное состояние
+            checkCardCompletion(card);
+
+            // Добавляем слушатель для чекбоксов
+            card.querySelectorAll('.task-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    checkCardCompletion(card);
+                });
+            });
+        });
+
+        // Добавим новую анимацию для празднования завершения
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes celebrate {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.03); }
+                100% { transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Анимация заголовка при скролле
+        const hero = document.querySelector('.hero h1');
+        window.addEventListener('scroll', () => {
+            const scroll = window.scrollY;
+            const scale = Math.max(0.5, 1 - scroll / 1000);
+            const opacity = Math.max(0, 1 - scroll / 500);
+            hero.style.transform = `scale(${scale}) translateY(${scroll * 0.5}px)`;
+            hero.style.opacity = opacity;
+        });
+    </script>
+</body>
+</html> 
